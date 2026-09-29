@@ -22,6 +22,6 @@ $$
 
 Weights outside the active set remain 1. The root launcher's active fraction is 1.0; groups without a reward difference provide no group-relative direction. Before a usable direction exists, the implementation falls back to unit weights. See the actual code for masks and numerical handling.
 
-The default internal mode is `credit_mode=jvp` with `credit_gate_kind=iw`; some historical comments describe finite-difference or binary-gating alternatives. Those comments should not be mistaken for the selected preset. The original Python source is preserved so these distinctions can be audited.
+The default preset uses `credit_mode=jvp` with `credit_gate_kind=iw`. The implementation also supports finite-difference credit computation and a binary sign gate.
 
-Token credits are context- and policy-dependent local signals, not intrinsic scores assigned permanently to token types. The separate experimental trace-collection extension is not included in this original-code snapshot.
+Token credits are context- and policy-dependent local signals, not intrinsic scores assigned permanently to token types.

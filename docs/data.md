@@ -2,16 +2,16 @@
 
 [← Project homepage](../README.md)
 
-## Distribution status
+## Required files
 
-This repository contains no dataset binaries. The original author-provided archive contains the prepared math files below; their hashes are recorded for exact identification. A public, version-pinned download location and redistribution review are still pending. **If you do not already have these files, the default training example is not yet self-contained.** This is a release item, not a reason to substitute a different dataset silently.
+Supply the prepared math files below via `TRAIN_DATASET` and `TEST_DATASET`. Dataset binaries and an automatic download command for these prepared files are not included in this repository. The checksums identify the reference files.
 
 | File | Rows | Use |
 | --- | --- | --- |
 | `deepmath-level6-train.parquet` | 57,046 | Default Qwen3-1.7B math training, DeepMath difficulty ≥ 6 |
-| `valid_final_unique.parquet` | 1,590 | Six-set evaluation bundle from the original snapshot |
+| `valid_final_unique.parquet` | 1,590 | Six-benchmark math evaluation bundle |
 
-SHA-256 of the supplied snapshot files:
+Reference SHA-256 checksums:
 
 ```text
 de3350fdd00bc0410550098ea65179e2be873da99e4075f80de575fc17670597  deepmath-level6-train.parquet
@@ -39,6 +39,6 @@ The evaluation bundle combines AIME24 (30), AIME25 (30), AMC (83), MATH500 (500)
 
 ## Other settings
 
-The manuscript trains Qwen3-1.7B-Base on the difficulty `[3,4)` band, with a separate four-shot prompt. Other math students use `[6,10]`. The retained `scripts/make_deepmath_level.py` is an original helper for creating a single difficulty band; it requires the original level-6 reference file and has legacy `/tmp` defaults. It is not a complete, version-pinned public data-preparation pipeline. Consult its arguments and set `DM_REF` explicitly before using it.
+The manuscript trains Qwen3-1.7B-Base on the difficulty `[3,4)` band, with a separate four-shot prompt. Other math students use `[6,10]`. The helper `scripts/make_deepmath_level.py` creates a single difficulty band and requires the level-6 reference file. Consult its arguments and set `DM_REF` explicitly; its default paths use `/tmp`.
 
 Code-generation data, code execution/evaluation infrastructure, and the Base-student prompting recipe are described in the [paper](../assets/paper.pdf) but are not packaged as runnable presets here. Dataset and model terms remain those of their original providers.

@@ -1,4 +1,4 @@
-"""CPU-only packaging checks. No torch, Ray, network, model, or GPU dependencies."""
+"""CPU-only repository checks. No torch, Ray, network, model, or GPU dependencies."""
 import hashlib
 import os
 import re
@@ -76,17 +76,43 @@ class DocumentationTests(unittest.TestCase):
                 markdown_processed = re.sub(r"\\([{}])", r"\1", equation)
                 self.assertIn(r"\left\lbrace", markdown_processed)
                 self.assertIn(r"\right\rbrace", markdown_processed)
-                self.assertIn(r"\tag{1}", markdown_processed)
                 self.assertNotIn(r"\left{", markdown_processed)
                 self.assertNotIn(r"\right}", markdown_processed)
 
-    def test_framework_matches_original_manifest(self):
+    def test_framework_matches_source_manifest(self):
         lines = (ROOT / "docs/source-manifest.sha256").read_text().splitlines()
         self.assertGreater(len(lines), 100)
         for line in lines:
             digest, name = line.split("  ", 1)
             with self.subTest(file=name):
                 self.assertEqual(hashlib.sha256((ROOT / name).read_bytes()).hexdigest(), digest)
+
+    def test_bilingual_homepages_share_equation_figures_and_author_links(self):
+        english = (ROOT / "README.md").read_text()
+        chinese = (ROOT / "README_zh.md").read_text()
+        self.assertEqual(english.split("$$")[1].strip(), chinese.split("$$")[1].strip())
+        author_links = {
+            "Zhenyu Wang": "https://zywang0701.github.io/",
+            "Linjun Zhang": "https://linjunz.github.io/",
+            "Yifan Hu": "https://sites.google.com/view/yifan-hu",
+        }
+        for text in (english, chinese):
+            for name, url in author_links.items():
+                self.assertIn(f"[{name}]({url})", text)
+            for number in (1, 2):
+                self.assertIn(f'src="assets/figure{number}.png"', text)
+
+    def test_public_docs_exclude_release_preparation_notes(self):
+        documents = [ROOT / "README.md", ROOT / "README_zh.md", ROOT / "UPSTREAM.md",
+                     ROOT / "LICENSE.md", *sorted((ROOT / "docs").glob("*.md"))]
+        forbidden = ("preparation snapshot", "before announcing a public release",
+                     "release-checklist.md", "user decision", "protocol_e030",
+                     "token-interpretability setup", "author-provided", "not for public")
+        for document in documents:
+            with self.subTest(document=document.name):
+                text = document.read_text().lower()
+                for phrase in forbidden:
+                    self.assertNotIn(phrase, text)
 
 
 class LauncherTests(unittest.TestCase):

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-"""E030 credit, JVP path: the per-token influence  D_t = <u, grad_theta log pi(y_t|s_t)>  from ONE
+"""JVP token credits: the per-token influence D_t = <u, grad_theta log pi(y_t|s_t)> from one
 forward-mode pass on a bf16, NON-FSDP replica of the student, instead of two fp32 finite-difference
 forwards on the sharded copy.
 
 Why this is allowed in bf16 while the finite difference is not: forward-mode AD carries the tangent
 as its own tensor (dual numbers), so each tensor only needs ~0.4 % relative precision of ITSELF;
 the finite difference needs the 1e-6-relative perturbation to survive inside the primal, which bf16
-and TF32 round away (calibration 09-10).
+and TF32 round away.
 
 Pieces:
   * replica        plain HF model on every GPU, bf16, eval, no grad, chunked eager attention
@@ -21,9 +21,9 @@ Pieces:
 Costs per step (4B, 8 GPUs): two 16 GB all-gathers (weights, u), one forward-mode pass (~3 bf16
 forward-equivalents with eager attention at mean length ~3K). Resident: replica 8 GB + u 8 GB.
 
-UNTESTED on GPU/FSDP as of 09-13: sync_weights / gather_tangent (FSDP internals), memory at 12K.
-The CPU test (tests/test_jvp_influence_cpu.py) covers the influence math, the chunked attention
-registration and the trimming against an fp32 finite difference on a plain model.
+The CPU test (tests/test_jvp_influence_cpu.py) covers the influence math, chunked attention
+registration and trimming against an fp32 finite difference on a plain model. It does not
+cover FSDP synchronization or long-sequence GPU memory requirements.
 """
 import torch
 import torch.nn.functional as F

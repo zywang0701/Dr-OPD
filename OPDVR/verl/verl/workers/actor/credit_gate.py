@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""E030 credit gate: Adam-aligned per-token mask for sampled-token OPD.
+"""Adam-aligned token credits and weight gates for sampled-token OPD.
 
 For token t of response i (state s_t, sampled token o_t), with the teacher push
     ell_t = log pi_T(o_t|s_t) - log pi_theta(o_t|s_t)          (= rm_scores in the OPDVR fork)
@@ -13,18 +13,19 @@ tangent G_s = sum_i (A_i/m_i) sum_t grad log pi(o_{i,t}|s_{i,t}),  A_i = R_i - m
     m_s = b1 m_{s-1} + (1-b1) G_s,   v_s = b2 v_{s-1} + (1-b2) G_s^2   (bias-corrected, bf16 storage)
     u_s = mhat_{s-1} / (sqrt(vhat_{s-1}) + adam_eps)                    (PRE-update: G_s is not in u_s)
 
-The directional derivative is a central finite difference on the served weights,
+The optional finite-difference path approximates the directional derivative as
 
     < grad log pi(o_t|s_t), u > ~= [log pi_{theta+eps u}(o_t|s_t) - log pi_{theta-eps u}(o_t|s_t)] / (2 eps),
 
-two ordinary forwards; eps is fixed by the pre-flight calibration (protocol_e030 section 4).
-Mask: w_t = 1[c_t > 0]. Step 0 (no moments yet) -> w == 1.
+using two ordinary forwards with the configured eps. The JVP alternative is in jvp_influence.py.
+The sign gate uses w_t = 1[c_t > 0]; iw_gate below provides continuous weights.
+Before shadow moments are available, weights default to one.
 
 Everything here operates on the LOCALLY OWNED parameter storage (FSDP1 flat-param shards,
 FSDP2 DTensor locals, or plain parameters); dot products are all-reduced, so the returned
 scalars are global. Perturbation is applied to the storage dtype: with fp32 master weights
-under FSDP mixed precision the forward casts (theta + eps u) to bf16 -- exactly the
-"perturb the master, then cast" path the calibration measured.
+under FSDP mixed precision the forward casts (theta + eps u) to bf16, which can erase
+small perturbations. Use the fp32 forward copy for finite differences.
 """
 import math
 
@@ -102,7 +103,7 @@ class CreditGate:
                  moments_dtype=torch.bfloat16, split_half=True, lowp_fracs=(0.1, 0.2), fd_module=None):
         self.view = ShardView(module)
         # optional fp32 copy of `module` with an identical shard layout: the finite difference is evaluated
-        # there (calibration 09-10: bf16/TF32 round eps=1e-6 away; fp32 passes with sign agreement 0.986)
+        # there because bf16/TF32 can round eps=1e-6 perturbations away.
         self.view_fd = ShardView(fd_module) if fd_module is not None else None
         if self.view_fd is not None:
             na = [p.numel() for p in self.view.params()]
@@ -155,7 +156,7 @@ class CreditGate:
 
     @torch.no_grad()
     def direction_from_optimizer(self, optimizer, beta2=None):
-        """E031: u = m_hat / (sqrt(v_hat^L) + adam_eps), with v^L the actor AdamW's OWN second moment
+        """u = m_hat / (sqrt(v_hat^L) + adam_eps), with v^L the actor AdamW's own second moment
         (same metric as the update; bias-corrected with the optimizer's step count). None before the
         first optimizer step or before the first moment update -> caller trains plain (w == 1)."""
         if self.n_upd == 0 or optimizer is None:
@@ -230,7 +231,7 @@ class CreditGate:
         return float(allv.kthvalue(k).values.item())
 
 
-# ----------------------------------------------------------------------------- E031: influence-weighted gate
+# ----------------------------------------------------------------------------- influence-weighted gate
 @torch.no_grad()
 def iw_gate(iota, mask, d, p_y, active_frac=0.2, w_max=3.0, f_hi=0.05, f_lo=0.15, lam_cap=4.0, last_tok=None, lam_fixed=0.0, w_min=0.0):
     """w_t = clip(1 + lam * z_t, w_min, w_max) on the active set S = {d != 0, p(y_t) <= q_active(p | d != 0)};
@@ -247,7 +248,7 @@ def iw_gate(iota, mask, d, p_y, active_frac=0.2, w_max=3.0, f_hi=0.05, f_lo=0.15
     q = {f: CreditGate.global_quantile(z, S, f) for f in (0.05, 0.10, 0.50, 0.90, 0.95, 1.0 - f_hi, f_lo)}
     lam_hi = (w_max - 1.0) / q[1.0 - f_hi] if q[1.0 - f_hi] > 0 else float("inf")
     lam_lo = -1.0 / q[f_lo] if q[f_lo] < 0 else float("inf")
-    lam = float(lam_fixed) if lam_fixed and lam_fixed > 0 else min(lam_hi, lam_lo, lam_cap)   # E031: fixed lambda (user 09-13) or budgets
+    lam = float(lam_fixed) if lam_fixed and lam_fixed > 0 else min(lam_hi, lam_lo, lam_cap)   # fixed lambda or clip budgets
     w = torch.where(S, (1.0 + lam * z).clamp(float(w_min), w_max), torch.ones_like(z))
     w = w * mask
     capped = S & (w >= w_max - 1e-6)

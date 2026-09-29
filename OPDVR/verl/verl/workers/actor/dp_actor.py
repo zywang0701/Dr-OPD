@@ -102,7 +102,7 @@ class DataParallelPPOActor(BasePPOActor):
             multi_modal_inputs = extract_multi_modal_inputs(micro_batch["multi_modal_inputs"])
 
         with torch.autocast(device_type=self.device_name, dtype=torch.bfloat16,
-                            enabled=not getattr(self, "fp32_forward", False)):   # E030: fp32 FD copy
+                            enabled=not getattr(self, "fp32_forward", False)):   # fp32 finite-difference copy
             input_ids = micro_batch["input_ids"]
             batch_size, seqlen = input_ids.shape
             attention_mask = micro_batch["attention_mask"]
@@ -647,7 +647,7 @@ class DataParallelPPOActor(BasePPOActor):
         return grad_norm
 
     @GPUMemoryLogger(role="dp actor", logger=logger)
-    # ------------------------------------------------------------------ E030 credit gate
+    # ------------------------------------------------------------------ token credit gate
     def _credit_logp_all(self, data, temperature, micro_batch_size, use_dynamic_bsz, max_token_len):
         """log pi(o_t|s_t) for the whole (local) batch, no grad, batch order preserved."""
         import contextlib
@@ -903,7 +903,7 @@ class DataParallelPPOActor(BasePPOActor):
                                    meta_info={"metrics": metrics})
 
     def compute_credit(self, data: DataProto) -> DataProto:
-        """E030: per-token credit mask (see credit_gate.py). Expects in data.batch:
+        """Per-token credit weights (see credit_gate.py). Expects in data.batch:
         rm_scores (ell_t), old_log_probs, response_mask, credit_w (A_i/m_i, per response),
         credit_half (0/1 per response), credit_A (A_i). Returns credit_mask / credit / credit_D
         (B, T) and global metrics in meta_info["metrics"]."""
@@ -944,7 +944,7 @@ class DataParallelPPOActor(BasePPOActor):
         # ---- 2. direction from the PREVIOUS steps' moments, then the finite difference
         self.actor_module.eval()
         gate_kind = str(data.meta_info.get("credit_gate_kind", "iw") or "iw")
-        u = gate.direction_from_optimizer(getattr(self, "actor_optimizer", None))   # E031: u = m_hat/(sqrt(v_hat^L)+eps)
+        u = gate.direction_from_optimizer(getattr(self, "actor_optimizer", None))   # u = m_hat/(sqrt(v_hat^L)+eps)
         if u is None:
             D = torch.zeros_like(ell)
             c = torch.zeros_like(ell)
@@ -955,7 +955,7 @@ class DataParallelPPOActor(BasePPOActor):
             metrics["credit/u_norm"] = gate.norm(u)
             jvp_mod = getattr(self, "jvp_influence", None)
             if jvp_mod is not None:
-                # ---- E030 JVP path: one forward-mode pass on the bf16 non-FSDP replica (jvp_influence.py)
+                # ---- JVP path: one forward-mode pass on the bf16 non-FSDP replica (jvp_influence.py)
                 import time as _time
                 _t = _time.time()
                 if os.environ.get("CREDIT_SCOPE", "batch") == "prompt":   # per-prompt influence
@@ -1013,10 +1013,10 @@ class DataParallelPPOActor(BasePPOActor):
                     metrics["credit/jvp_fd_rel_rmse"] = float(torch.sqrt(num / den.clamp_min(1e-30)))
                     del D_fd, lp_p, lp_m
             else:
-                fd = getattr(self, "fd_policy", None)          # fp32 copy (calibration 09-10); else the actor itself
+                fd = getattr(self, "fd_policy", None)          # fp32 copy; otherwise the actor itself
                 fd_actor = fd if fd is not None else self
                 tf32_m, tf32_c = torch.backends.cuda.matmul.allow_tf32, torch.backends.cudnn.allow_tf32
-                torch.backends.cuda.matmul.allow_tf32 = False   # TF32 rounds a 1e-6 perturbation away (0.886 agreement)
+                torch.backends.cuda.matmul.allow_tf32 = False   # TF32 can round a 1e-6 perturbation away
                 torch.backends.cudnn.allow_tf32 = False
                 try:
                     gate.sync_fd()
@@ -1035,7 +1035,7 @@ class DataParallelPPOActor(BasePPOActor):
             c = ell * D * mask
             p_y_all = data.batch["old_log_probs"].float().exp()
             if gate_kind == "iw":
-                # ---- E031: influence-weighted gate on the active set (credit_gate.iw_gate)
+                # ---- Influence-weighted gate on the active set (credit_gate.iw_gate)
                 from verl.workers.actor.credit_gate import iw_gate
                 _len = mask.sum(-1).long().clamp_min(1)
                 last_tok = torch.zeros_like(mask, dtype=torch.bool)
@@ -1057,7 +1057,7 @@ class DataParallelPPOActor(BasePPOActor):
                 metrics["credit/gain_ratio_vs_plain"] = float(_num / _den) if abs(float(_den)) > 1e-12 else float("nan")
                 metrics["credit/rms_iota"] = float(torch.sqrt(_all_reduce_sum((D * D * mask).sum().double()) / _all_reduce_sum(mask.sum().double()).clamp_min(1)))
             else:
-                wmask = (c > 0).float() * mask      # E030 hard sign gate
+                wmask = (c > 0).float() * mask      # hard sign gate
             metrics["credit/active"] = 1.0
             n_tok = _all_reduce_sum((mask.sum()).double())
             metrics["credit/rms_dlp"] = float(torch.sqrt(_all_reduce_sum((dlp * dlp).sum().double()) / n_tok.clamp_min(1)))

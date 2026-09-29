@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Dr. OPD packaging: use the root launcher's environment, never stop other Ray jobs.
-# Sourced by legacy entry points; no change to algorithm/configuration defaults.
+# Shared runtime: use the root launcher's environment, never stop other Ray jobs.
+# Sourced by the method entry points.
 set -euo pipefail
 if [ -n "${VENV:-}" ]; then
   export PATH="$VENV/bin:$PATH"

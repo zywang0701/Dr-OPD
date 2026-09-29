@@ -177,30 +177,30 @@ class RolloutConfig(BaseConfig):
     # 1.0 = plain OPD (off); the paper uses 1.25. See verl/trainer/ppo/exopd_reward.py.
     exopd_lambda: float = 1.0
 
-    # E030 credit gate (ours): mask the sampled-token distillation reward by the sign of
+    # Token credit for weighting the sampled-token distillation reward:
     # c_t = ell_t * <grad log pi(o_t|s_t), u>, u = pre-update Adam-normalised EMA of the Dr.GRPO
-    # tangent; directional derivative by central finite difference on the served weights.
+    # tangent; directional derivative by finite difference or JVP, selected with credit_mode.
     # See verl/workers/actor/credit_gate.py. Mutually exclusive in spirit with correctness_gated /
     # grpo_scaled (those are the OPDVR / GRPD arms); the code does not forbid composing them.
     credit_gated: bool = False
-    credit_eps: float = 1e-6            # FD step; calibration 09-10: fp32 passes at 1e-6, bf16/TF32 never
+    credit_eps: float = 1e-6            # finite-difference step; requires fp32 weights and matmul
     credit_fd_fp32: bool = True         # evaluate the FD on an fp32 copy of the actor (same FSDP layout)
     credit_mode: str = "fd"             # "fd": fp32 finite difference (default) | "jvp": bf16 forward-mode on a non-FSDP replica
     credit_jvp_qblock: int = 1024       # query block of the chunked eager attention used by the JVP replica
     credit_jvp_check: int = 0           # >0: on the first N active steps also run the fp32 FD and log jvp_fd_sign_agree / rel_rmse
-    # E031 influence-weighted gate (ours). credit_gate_kind: "iw" = w=clip(1+lam*z,0,w_max) on the active set,
-    # "sign" = the E030 hard gate 1[c>0]. Tangent: credit_adv_norm "grpo" = (R-mean)/(std+eps), "drgrpo" = R-mean;
+    # Influence-weighted gate. credit_gate_kind: "iw" = w=clip(1+lam*z,w_min,w_max) on the active set,
+    # "sign" = the hard gate 1[c>0]. Tangent: credit_adv_norm "grpo" = (R-mean)/(std+eps), "drgrpo" = R-mean;
     # credit_len_norm divides each response's advantage by its length.
     credit_gate_kind: str = "iw"
     credit_adv_norm: str = "grpo"
     credit_len_norm: bool = True
     credit_active_frac: float = 0.2
-    credit_w_max: float = 3.0           # loose cap (user 09-13): linear for all ordinary tokens, bounds extreme clusters
+    credit_w_max: float = 3.0           # upper bound for token weights
     credit_f_hi: float = 0.05           # used only when credit_lam_fixed == 0
     credit_f_lo: float = 0.15
     credit_lam_cap: float = 4.0
     credit_w_min: float = 0.0           # lower clip of the token weight (0 = hard zero, as in the original gate; the reported runs use 0.001)
-    credit_lam_fixed: float = 0.2       # >0: fixed lambda (user 09-13); 0: two-sided clip budgets
+    credit_lam_fixed: float = 0.2       # >0: fixed lambda; 0: two-sided clip budgets
     credit_fd_micro_batch_size_per_gpu: int = 1   # padded fp32 forward: logits [mbs, L, V] fp32 (1 x 17K x 152K = 10 GB)
     credit_beta1: float = 0.9
     credit_beta2: float = 0.999

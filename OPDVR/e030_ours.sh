@@ -1,12 +1,11 @@
 #!/bin/bash
-# E030 arm 3/3: ours -- credit gate w_t = 1[ell_t * <grad log pi(o_t), u> > 0], u = pre-update Adam-normalised
-# EMA of the Dr.GRPO tangent, finite-difference directional derivative (verl/workers/actor/credit_gate.py).
-# CREDIT_EPS must be the value from the pre-flight calibration (protocol_e030 section 4).
+# Dr. OPD: JVP token credits with influence-weighted distillation by default.
+# See verl/workers/actor/credit_gate.py and jvp_influence.py for credit and gate definitions.
 set -eu; cd "$(dirname "$0")"; source ./e030_common.sh
 export EXPERIMENT_NAME=${EXPERIMENT_NAME:-e030_ours_$(date +%m%d_%H%M)}
 export CORRECTNESS_GATED=False GRPO_SCALED=False
-export VAL_N=${VAL_N:-16} VAL_BEFORE_TRAIN=${VAL_BEFORE_TRAIN:-True}   # E031: protocol eval (avg@16, s0 point)
-export CREDIT_EPS=${CREDIT_EPS:-1e-6}   # calibration 09-10: fp32 FD passes at 1e-6 (sign agreement 0.986)
+export VAL_N=${VAL_N:-16} VAL_BEFORE_TRAIN=${VAL_BEFORE_TRAIN:-True}   # evaluation options; root preset may override
+export CREDIT_EPS=${CREDIT_EPS:-1e-6}   # step size for the optional fp32 finite-difference path
 bash opd_baseline.sh "${E030_EXTRA[@]}" \
   +actor_rollout_ref.rollout.credit_gated=True \
   +actor_rollout_ref.rollout.credit_eps=$CREDIT_EPS \

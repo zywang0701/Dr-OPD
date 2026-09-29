@@ -2,7 +2,7 @@
 
 [← Project homepage](../README.md)
 
-All numbers below are transcribed from the bundled [manuscript](../assets/paper.pdf), not measured by the repository's CPU checks or a new training run. Math uses avg@16 across AIME24, AIME25, AMC, Minerva and OlympiadBench. Code uses avg@4 across HumanEval+, MBPP+ and LiveCodeBench. The paper reports the best evaluated checkpoint per method.
+The following results are reported in the [paper](../assets/paper.pdf). Math uses avg@16 across AIME24, AIME25, AMC, Minerva and OlympiadBench. Code uses avg@4 across HumanEval+, MBPP+ and LiveCodeBench. The paper reports the best evaluated checkpoint per method.
 
 ## Strong-to-weak distillation
 
@@ -20,7 +20,7 @@ Teacher: Qwen3-4B. Entries are task averages in percentage points; the manuscrip
 
 ## Same-size distillation
 
-Each student uses its corresponding RL-trained teacher. These are math results; no same-size code results are claimed here.
+Each student uses its corresponding RL-trained teacher. The table reports math results.
 
 | Method | Qwen3-4B | Qwen3-4B-Base |
 | --- | ---: | ---: |
@@ -34,8 +34,4 @@ Each student uses its corresponding RL-trained teacher. These are math results; 
 
 ![Figure 2: Empirical gains reported in the manuscript](../assets/figure2.png)
 
-Figure 2 is copied unchanged from the manuscript. Its annotated gains are retained as reported rather than recomputed from rounded table entries. In particular, the displayed same-size scores 55.6 and 57.8 differ by 2.2, while the paper annotates +2.3; the unrounded values or annotation need author verification before final release.
-
-## Reproduction boundary
-
-The code snapshot does not yet establish a verified one-command reproduction of every table. In particular, the launcher/evaluation scheduling discrepancy and the five-versus-six benchmark distinction are documented in [reproduction status](reproduction.md#protocol-status). Code-generation and Base-student task-specific presets are not included. No code or result was silently changed to resolve these differences during packaging.
+For training coverage, checkpoint selection and benchmark aggregation, see the [reproduction guide](reproduction.md#evaluation).

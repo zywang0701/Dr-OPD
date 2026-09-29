@@ -2,7 +2,7 @@
 # Launcher for the math distillation experiments (single node, 8 GPUs).
 #
 #   bash run.sh setup                     # venv + models (~30 min)
-#   bash run.sh data                      # verify the math parquet files shipped with this repo
+#   bash run.sh data                      # verify the supplied math parquet files
 #   bash run.sh train ours                # our method with the reported defaults (lambda 0.4, seed 2)
 #   bash run.sh train ours 0.4 1          # <arm> [lambda, ours only] [seed]
 #   bash run.sh train plain               # baseline: sampled-token on-policy distillation
@@ -10,9 +10,7 @@
 #   bash run.sh train opdgrpo             # baseline: distillation reward + GRPO advantage
 #   bash run.sh train exopd               # baseline: extrapolated distillation reward
 #
-# Dr. OPD packaging changes: safe dry run, portable environment, input validation,
-# preserved GPU allocation, and pipeline failure propagation. Training source unchanged.
-# Snapshot defaults: student Qwen3-1.7B (non-thinking),
+# Defaults: student Qwen3-1.7B (non-thinking),
 # teacher Qwen3-4B (non-thinking), AdamW lr 1e-5 constant without warmup, grad_clip 1.0,
 # 128 prompts x 8 rollouts per step, prompt limit 1024, response limit 12288, bf16 rollout,
 # fp32 master weights, Dr.GRPO advantage, 50 steps, checkpoints at steps 30/40/50.
@@ -40,7 +38,7 @@ export RESULTS_DIR
 STUDENT=${STUDENT:-Qwen/Qwen3-1.7B}           # student; a local path works too
 TEACHER=${TEACHER:-Qwen/Qwen3-4B}             # teacher, scores the student's own tokens
 STEPS=${STEPS:-50}
-EVAL_STEPS=${EVAL_STEPS:-30,40,50}            # steps at which to evaluate (avg@16) and checkpoint
+EVAL_STEPS=${EVAL_STEPS:-30,40,50}            # checkpoint steps; does not control evaluation timing
 RESP_LEN=${RESP_LEN:-12288}
 VAL_LEN=${VAL_LEN:-12288}
 GRAD_CLIP=${GRAD_CLIP:-1.0}

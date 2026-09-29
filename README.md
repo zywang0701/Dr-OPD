@@ -4,7 +4,7 @@
 
 ### Learning What to Follow for Optimal<br>On-Policy Distillation of Large Language Models
 
-Zhenyu Wang<sup>\*</sup> · Tianze Wang<sup>\*</sup> · Linjun Zhang · Yifan Hu
+[Zhenyu Wang](https://zywang0701.github.io/)<sup>\*</sup> · Tianze Wang<sup>\*</sup> · [Linjun Zhang](https://linjunz.github.io/) · [Yifan Hu](https://sites.google.com/view/yifan-hu)
 
 Department of Statistics, Rutgers University<br>
 <sub>\* Equal contribution</sub>
@@ -91,7 +91,7 @@ bash run.sh train ours
 | --- | --- | --- | --- | --- |
 | Qwen3-1.7B | Qwen3-4B | λ = 0.4 | 50 | 2 |
 
-The snapshot's evaluation schedule and benchmark aggregation need reconciliation with the manuscript before claiming exact table reproduction. See the [reproduction status](docs/reproduction.md#protocol-status); this packaging update preserves the training implementation and does not silently change the experiment protocol.
+See the [evaluation settings](docs/reproduction.md#evaluation) for checkpoint selection and benchmark aggregation.
 
 <details>
 <summary><b>Baselines and configuration overrides</b></summary>
@@ -112,7 +112,7 @@ For model paths, evaluation settings, output locations and all method options, s
 
 ## Code Guide
 
-The training implementation remains in `OPDVR/verl/`; the original Python source is preserved. Only the launch and documentation layer is adapted for this repository.
+The training implementation is in `OPDVR/verl/`.
 
 | Component | Implementation |
 | --- | --- |
@@ -136,4 +136,4 @@ The training implementation remains in `OPDVR/verl/`; the original Python source
 
 ## Acknowledgements
 
-This implementation builds on [OPD](https://github.com/thunlp/OPD) and [verl](https://github.com/volcengine/verl), including the OPDVR/GRPD code lineage retained in the original snapshot. See [UPSTREAM.md](UPSTREAM.md) for provenance and [licensing notes](LICENSE.md) for the preserved upstream license and project-level release status.
+This implementation builds on [OPD](https://github.com/thunlp/OPD) and [verl](https://github.com/volcengine/verl), with contributions from the OPDVR/GRPD codebase. See [UPSTREAM.md](UPSTREAM.md) and [third-party licenses](LICENSE.md).

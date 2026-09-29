@@ -1,9 +1,9 @@
 #!/bin/bash
-# Build the training environment for this archive: a venv with verl + vLLM + flash-attn, then the models.
+# Build the training environment: a venv with verl + vLLM + flash-attn, then the models.
 # Called by "bash run.sh setup"; can also be run directly:
 #   WORK=./work VENV=./work/venv bash scripts/install.sh
 # The pinned versions are the ones all reported runs used. Linux + CUDA 12.x + python3.11, 8 GPUs.
-# Dr. OPD packaging: propagate pipeline errors and require the wheel's Python version.
+# Propagate pipeline errors and require the wheel's Python version.
 set -euo pipefail
 HERE=$(cd "$(dirname "$0")/.." && pwd)
 WORK=${WORK:-$HERE/work}

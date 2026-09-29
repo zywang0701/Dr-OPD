@@ -4,7 +4,7 @@
 
 ### Learning What to Follow for Optimal<br>On-Policy Distillation of Large Language Models
 
-Zhenyu Wang<sup>\*</sup> · Tianze Wang<sup>\*</sup> · Linjun Zhang · Yifan Hu
+[Zhenyu Wang](https://zywang0701.github.io/)<sup>\*</sup> · Tianze Wang<sup>\*</sup> · [Linjun Zhang](https://linjunz.github.io/) · [Yifan Hu](https://sites.google.com/view/yifan-hu)
 
 Department of Statistics, Rutgers University<br>
 <sub>\* 共同第一作者</sub>
@@ -26,11 +26,12 @@ Department of Statistics, Rutgers University<br>
 On-policy distillation（OPD）在学生生成的回答上提供密集的 token-level 教师监督。Vanilla OPD 为每个教师信号赋予相同的权重；**Dr. OPD** 则根据这些信号对提升学生表现的帮助，自适应地调整权重。我们将其表述为：
 
 $$
-\max_w \left\lbrace\text{Student performance after training with } w\text{-weighted OPD}\right\rbrace.
-\tag{1}
+\max_w \left\lbrace\text{Student's performance after training with } w\text{-weighted OPD}\right\rbrace.
 $$
 
-直接求解式 (1) 在计算上不可行。因此，我们提出一个迭代求解器：每轮先以闭式解更新权重，再对所得的 weighted OPD 目标做一步梯度更新。
+其中，$w$ 是定义在所有可能生成的 token 上的权重函数。
+
+精确求解 Dr. OPD 需要在不同的权重函数下反复训练学生，再选出最优权重，在计算上不可行。我们提出一个迭代求解器：每轮先以闭式解更新权重，再对所得的 weighted OPD 目标做一步梯度更新。
 
 <p align="center">
   <a href="assets/figure1.png"><img src="assets/figure1.png" width="100%" alt="图 1：Vanilla OPD 使用相同权重；Dr. OPD 交替进行闭式权重更新与加权 OPD 梯度更新。"></a>
@@ -50,7 +51,7 @@ Dr. OPD 在数学与代码任务的 strong-to-weak 和 same-size 蒸馏设置中
 
 ## 快速开始
 
-当前仓库基于 Tianze 原版代码，提供 **math 训练流程**、Dr. OPD 和四个基线。论文代码生成任务的结果见[结果文档](docs/results.md)，该快照尚未包含对应的专用运行入口。
+当前仓库提供 **math 训练流程**、Dr. OPD 和四个基线。论文代码生成任务的结果见[结果文档](docs/results.md)，目前尚未包含对应的专用运行入口。
 
 ### 1. 查看配置，无需 GPU
 
@@ -78,7 +79,7 @@ export TEST_DATASET=/path/to/valid_final_unique.parquet
 bash run.sh data
 ```
 
-数据格式、来源与准备状态见[数据文档](docs/data.md)。本仓库不包含数据集二进制文件。
+数据格式与文件要求见[数据文档](docs/data.md)。本仓库不包含数据集二进制文件。
 
 ### 3. 训练
 
@@ -90,7 +91,7 @@ bash run.sh train ours
 | --- | --- | --- | --- | --- |
 | Qwen3-1.7B | Qwen3-4B | λ = 0.4 | 50 | 2 |
 
-该快照的评测时点与 benchmark 汇总方式仍需和论文核对，之后才能承诺精确复现论文表格。详见[复现状态](docs/reproduction.md#protocol-status)；本次整理保留训练实现，不擅自修改实验协议。
+Checkpoint 选择与 benchmark 汇总方式详见[评测设置](docs/reproduction.md#evaluation)。
 
 <details>
 <summary><b>基线与参数覆盖</b></summary>
@@ -110,7 +111,7 @@ STEPS=30 bash run.sh train ours --dry-run
 
 ## 代码导航
 
-训练实现保留在 `OPDVR/verl/`，原始 Python 代码未改动。本仓库只整理启动与文档层。
+训练实现位于 `OPDVR/verl/`。
 
 | 内容 | 文件 |
 | --- | --- |
@@ -134,4 +135,4 @@ STEPS=30 bash run.sh train ours --dry-run
 
 ## 致谢
 
-本实现基于 [OPD](https://github.com/thunlp/OPD) 与 [verl](https://github.com/volcengine/verl)，并保留原快照中的 OPDVR/GRPD 代码来源说明。详见 [UPSTREAM.md](UPSTREAM.md) 和[许可说明](LICENSE.md)。
+本实现基于 [OPD](https://github.com/thunlp/OPD) 与 [verl](https://github.com/volcengine/verl)，并使用了 OPDVR/GRPD 代码库的贡献。详见 [UPSTREAM.md](UPSTREAM.md) 和[第三方许可](LICENSE.md)。

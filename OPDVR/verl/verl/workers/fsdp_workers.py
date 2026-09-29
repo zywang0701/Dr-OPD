@@ -294,7 +294,7 @@ class ActorRolloutRefWorker(Worker, DistProfilerExtension):
         from verl.utils.model import get_generation_config, print_model_size, update_model_config
         from verl.utils.torch_dtypes import PrecisionType
 
-        assert role in ["actor", "ref", "fd"]   # fd = E030 fp32 finite-difference copy of the actor
+        assert role in ["actor", "ref", "fd"]   # fd = fp32 finite-difference copy of the actor
 
         log_gpu_memory_usage(f"Before init {role} from HF AutoModel", logger=logger)
         local_path = model_path
@@ -812,13 +812,13 @@ class ActorRolloutRefWorker(Worker, DistProfilerExtension):
             if self.config.rollout.get("credit_gated", False):
                 from verl.workers.actor.credit_gate import CreditGate
                 rc = self.config.rollout
-                # E030 (calibration 09-10): the finite difference is only valid on fp32 weights with fp32 matmul
+                # Finite differences require fp32 weights and fp32 matmul for small perturbations
                 # (bf16 and TF32 round a 1e-6 perturbation away). Build an fp32 copy of the actor with the SAME
                 # FSDP unit structure (same wrap policy) so flat-param shards align 1:1 and can be copied each step.
                 # No remove-padding (its flash-attn kernels are bf16-only), SDPA attention, no grad, GPU-resident.
                 fd_module = None
                 if rc.get("credit_mode", "fd") == "jvp":
-                    # E030 JVP path: bf16 non-FSDP replica on every GPU, forward-mode influence in one pass.
+                    # JVP path: bf16 non-FSDP replica on every GPU, forward-mode influence in one pass.
                     # Replaces the fp32 finite-difference copy (jvp_influence.py; ~1/3 of the FD cost).
                     from verl.workers.actor.jvp_influence import JVPInfluence
                     self.actor.jvp_influence = JVPInfluence(
@@ -1069,7 +1069,7 @@ class ActorRolloutRefWorker(Worker, DistProfilerExtension):
     @register(dispatch_mode=make_nd_compute_dataproto_dispatch_fn(mesh_name="actor"))
     @DistProfiler.annotate(color="blue", role="actor_compute_credit_mask")
     def compute_credit_mask(self, data: DataProto):
-        """E030: Dr.GRPO tangent (one backward, no optimizer step), shadow Adam moments, finite-difference
+        """Dr.GRPO tangent (one backward, no optimizer step), shadow Adam moments, finite-difference
         credit, {0,1} mask. Runs on the pre-update actor; see verl/workers/actor/credit_gate.py."""
         assert self._is_actor
         if self._is_offload_param:
