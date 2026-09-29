@@ -35,7 +35,7 @@ Directly solving Dr. OPD exactly would require repeatedly training the student u
 
 <p align="center">
   <a href="assets/figure1.png"><img src="assets/figure1.png" width="100%" alt="Figure 1. Vanilla OPD assigns equal weights to teacher signals. Dr. OPD alternates closed-form weight updates and weighted OPD gradient updates."></a>
-  <br><sub><b>Figure 1.</b> Illustration of Dr. OPD. Click the figure to view it at full resolution.</sub>
+  <br><sub><b>Figure 1.</b> Illustration of Dr. OPD.</sub>
 </p>
 
 ## Results
