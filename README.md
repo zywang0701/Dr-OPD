@@ -59,7 +59,7 @@ The current implementation provides the **math training pipeline**, with Dr. OPD
 From the repository root:
 
 ```bash
-bash run.sh train ours --dry-run
+bash run.sh train dropd --dry-run
 ```
 
 This prints the launch configuration without creating an environment, querying GPUs, starting Ray, downloading models, or training.
@@ -85,7 +85,7 @@ See [data preparation](docs/data.md) for the expected files, schema and provenan
 ### 3. Train
 
 ```bash
-bash run.sh train ours
+bash run.sh train dropd
 ```
 
 | Student | Teacher | Weighting strength | Training steps | Data seed |
@@ -103,8 +103,8 @@ bash run.sh train grpd        # Group-relative policy distillation
 bash run.sh train opdgrpo     # OPD + GRPO
 bash run.sh train exopd       # Extrapolated OPD
 
-bash run.sh train ours 0.4 2  # Explicit lambda and data seed
-STEPS=30 bash run.sh train ours --dry-run
+bash run.sh train dropd 0.4 2  # Explicit lambda and data seed
+STEPS=30 bash run.sh train dropd --dry-run
 ```
 
 For model paths, evaluation settings, output locations and all method options, see the [reproduction guide](docs/reproduction.md).

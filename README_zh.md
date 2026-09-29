@@ -59,7 +59,7 @@ $$
 在仓库根目录执行：
 
 ```bash
-bash run.sh train ours --dry-run
+bash run.sh train dropd --dry-run
 ```
 
 只打印启动配置，不创建环境、不查询 GPU、不启动 Ray、不下载模型，也不开始训练。
@@ -85,7 +85,7 @@ bash run.sh data
 ### 3. 训练
 
 ```bash
-bash run.sh train ours
+bash run.sh train dropd
 ```
 
 | Student | Teacher | 权重强度 | 训练步数 | 数据随机种子 |
@@ -102,8 +102,8 @@ bash run.sh train plain
 bash run.sh train grpd
 bash run.sh train opdgrpo
 bash run.sh train exopd
-bash run.sh train ours 0.4 2
-STEPS=30 bash run.sh train ours --dry-run
+bash run.sh train dropd 0.4 2
+STEPS=30 bash run.sh train dropd --dry-run
 ```
 
 模型路径、输出位置及完整参数见[复现指南](docs/reproduction.md)。

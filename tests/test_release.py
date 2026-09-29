@@ -12,7 +12,7 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
-ARMS = ("ours", "plain", "grpd", "opdgrpo", "exopd")
+ARMS = ("dropd", "plain", "grpd", "opdgrpo", "exopd")
 
 
 class LinkParser(HTMLParser):
@@ -145,14 +145,17 @@ class LauncherTests(unittest.TestCase):
                 result = self.run_launcher("train", arm, "--dry-run")
                 self.assertEqual(result.returncode, 0, result.stderr)
                 self.assertIn(f"Method: {arm}", result.stdout)
+                self.assertIn(f"Entry point: bash OPDVR/e030_{arm}.sh", result.stdout)
+                self.assertTrue((ROOT / f"OPDVR/e030_{arm}.sh").is_file())
                 self.assertIn("test_freq=1000", result.stdout)
                 self.assertEqual(list(self.scratch.iterdir()), [])
 
     def test_dry_run_accepts_overrides_and_preserves_allocation(self):
         self.env.update(STEPS="30", STUDENT="/models/student with spaces", CUDA_VISIBLE_DEVICES="2,3")
-        result = self.run_launcher("--dry-run", "train", "ours", "0.5", "7")
+        result = self.run_launcher("--dry-run", "train", "dropd", "0.5", "7")
         self.assertEqual(result.returncode, 0, result.stderr)
-        for expected in ("Steps: 30", "Data seed: 7", "Lambda argument (ours): 0.5",
+        for expected in ("Steps: 30", "Data seed: 7", "Lambda argument (dropd): 0.5",
+                         "math_dropd_lam0.5_seed7.log",
                          "CUDA_VISIBLE_DEVICES: 2,3", "Student: /models/student with spaces"):
             self.assertIn(expected, result.stdout)
         self.assertEqual(list(self.scratch.iterdir()), [])
@@ -164,14 +167,15 @@ class LauncherTests(unittest.TestCase):
         self.assertEqual(list(self.scratch.iterdir()), [])
 
     def test_invalid_input_fails_without_side_effects(self):
-        cases = (("train", "../ours", "--dry-run"), ("train", "ours", "oops", "--dry-run"),
-                 ("train", "ours", "0.4", "-2", "--dry-run"), ("train", "ours", "--unknown"))
+        cases = (("train", "../dropd", "--dry-run"), ("train", "dropd", "oops", "--dry-run"),
+                 ("train", "dropd", "0.4", "-2", "--dry-run"), ("train", "dropd", "--unknown"),
+                 ("train", "ours", "--dry-run"))
         for args in cases:
             self.assertNotEqual(self.run_launcher(*args).returncode, 0)
         self.assertEqual(list(self.scratch.iterdir()), [])
 
     def test_missing_data_fails_before_creating_runtime(self):
-        result = self.run_launcher("train", "ours")
+        result = self.run_launcher("train", "dropd")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("Missing prepared data", result.stderr)
         self.assertEqual(list(self.scratch.iterdir()), [])
@@ -219,15 +223,15 @@ class LauncherTests(unittest.TestCase):
     def test_failure_is_not_hidden_by_tee(self):
         root = self.prepare_mock_training()
         self.env["MOCK_EXIT"] = "17"
-        result = self.run_launcher("train", "ours", root=root)
+        result = self.run_launcher("train", "dropd", root=root)
         self.assertEqual(result.returncode, 17)
 
     def test_existing_log_is_not_overwritten(self):
         root = self.prepare_mock_training()
-        self.assertEqual(self.run_launcher("train", "ours", root=root).returncode, 0)
-        logfile = self.scratch / "results/math_ours_lam0.4_seed2.log"
+        self.assertEqual(self.run_launcher("train", "dropd", root=root).returncode, 0)
+        logfile = self.scratch / "results/math_dropd_lam0.4_seed2.log"
         original = logfile.read_bytes()
-        result = self.run_launcher("train", "ours", root=root)
+        result = self.run_launcher("train", "dropd", root=root)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("Refusing to overwrite", result.stderr)
         self.assertEqual(logfile.read_bytes(), original)
@@ -236,6 +240,20 @@ class LauncherTests(unittest.TestCase):
         for source in [ROOT / "run.sh", *(ROOT / "scripts").glob("*.sh"), *(ROOT / "OPDVR").glob("*.sh")]:
             result = subprocess.run(["bash", "-n", str(source)], text=True, capture_output=True)
             self.assertEqual(result.returncode, 0, f"{source}: {result.stderr}")
+
+    def test_dropd_name_and_weighting_configuration(self):
+        help_result = self.run_launcher("--help")
+        self.assertEqual(help_result.returncode, 0)
+        self.assertIn("<dropd|plain|grpd|opdgrpo|exopd>", help_result.stdout)
+        root = self.prepare_mock_training()
+        result = self.run_launcher("train", "dropd", "0.7", "9", root=root)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        for expected in ("trainer.experiment_name=math_dropd_lam0.7_seed9", "data.seed=9",
+                         "+actor_rollout_ref.rollout.credit_gated=True",
+                         "+actor_rollout_ref.rollout.credit_mode=jvp",
+                         "+actor_rollout_ref.rollout.credit_gate_kind=iw",
+                         "+actor_rollout_ref.rollout.credit_lam_fixed=0.7"):
+            self.assertIn(f"MOCK_TRAIN_ARG={expected}", result.stdout)
 
 
 if __name__ == "__main__":

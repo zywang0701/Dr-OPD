@@ -75,4 +75,4 @@ for repo in ("Qwen/Qwen3-1.7B", "Qwen/Qwen3-4B"):
 PY
 fi
 log "done. venv $VENV, models $MODELS"
-log "next: set TRAIN_DATASET and TEST_DATASET; bash run.sh data; bash run.sh train ours 0.4 2"
+log "next: set TRAIN_DATASET and TEST_DATASET; bash run.sh data; bash run.sh train dropd 0.4 2"

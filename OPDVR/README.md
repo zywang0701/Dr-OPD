@@ -6,7 +6,7 @@ Start from the [project homepage](../README.md) and use `bash run.sh` from the r
 
 | Entry point | Method |
 | --- | --- |
-| `e030_ours.sh` | Dr. OPD |
+| `e030_dropd.sh` | Dr. OPD |
 | `e030_plain.sh` | Vanilla OPD |
 | `e030_grpd.sh` | GRPD |
 | `e030_opdgrpo.sh` | OPD + GRPO |

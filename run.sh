@@ -3,8 +3,8 @@
 #
 #   bash run.sh setup                     # venv + models (~30 min)
 #   bash run.sh data                      # verify the supplied math parquet files
-#   bash run.sh train ours                # our method with the reported defaults (lambda 0.4, seed 2)
-#   bash run.sh train ours 0.4 1          # <arm> [lambda, ours only] [seed]
+#   bash run.sh train dropd               # Dr. OPD with the reported defaults (lambda 0.4, seed 2)
+#   bash run.sh train dropd 0.4 1         # <arm> [lambda, dropd only] [seed]
 #   bash run.sh train plain               # baseline: sampled-token on-policy distillation
 #   bash run.sh train grpd                # baseline: correctness-gated distillation
 #   bash run.sh train opdgrpo             # baseline: distillation reward + GRPO advantage
@@ -16,14 +16,14 @@
 # fp32 master weights, Dr.GRPO advantage, 50 steps, checkpoints at steps 30/40/50.
 # The original trainer ignores TEST_STEPS; see docs/reproduction.md before comparing scores.
 # Any of them can be overridden on the command line, e.g.
-#   STEPS=30 EVAL_STEPS=10,20,30 bash run.sh train ours 0.4 2
+#   STEPS=30 EVAL_STEPS=10,20,30 bash run.sh train dropd 0.4 2
 set -euo pipefail
 DRY_RUN=0
 POSITIONAL=()
 for arg in "$@"; do
   case "$arg" in
     --dry-run) DRY_RUN=1 ;;
-    --help|-h) printf 'Usage: bash run.sh setup|data|train <ours|plain|grpd|opdgrpo|exopd> [lambda] [data_seed] [--dry-run]\n'; exit 0 ;;
+    --help|-h) printf 'Usage: bash run.sh setup|data|train <dropd|plain|grpd|opdgrpo|exopd> [lambda] [data_seed] [--dry-run]\n'; exit 0 ;;
     --*) printf 'Unknown option: %s\n' "$arg" >&2; exit 2 ;;
     *) POSITIONAL+=("$arg") ;;
   esac
@@ -42,8 +42,8 @@ EVAL_STEPS=${EVAL_STEPS:-30,40,50}            # checkpoint steps; does not contr
 RESP_LEN=${RESP_LEN:-12288}
 VAL_LEN=${VAL_LEN:-12288}
 GRAD_CLIP=${GRAD_CLIP:-1.0}
-CREDIT_ACTIVE=${CREDIT_ACTIVE:-1.0}           # ours: active set = every token of a mixed-reward group
-CREDIT_WMIN=${CREDIT_WMIN:-0.001}             # ours: lower clip of w = clip(1 + lambda*z, w_min, 3)
+CREDIT_ACTIVE=${CREDIT_ACTIVE:-1.0}           # Dr. OPD: active set = every token of a mixed-reward group
+CREDIT_WMIN=${CREDIT_WMIN:-0.001}             # Dr. OPD: lower clip of w = clip(1 + lambda*z, w_min, 3)
 NGPU=${NGPU:-8}
 
 runtime_env() {
@@ -81,11 +81,11 @@ data)
   ;;
 
 train)
-  ARM=${2:?arm: ours|plain|grpd|opdgrpo|exopd}
+  ARM=${2:?arm: dropd|plain|grpd|opdgrpo|exopd}
   LAM=${3:-0.4}
   SEED=${4:-2}
   [ "$#" -le 4 ] || { echo 'Too many arguments; see --help.' >&2; exit 2; }
-  case "$ARM" in ours|plain|grpd|opdgrpo|exopd) ;; *) echo "Unknown method: $ARM" >&2; exit 2 ;; esac
+  case "$ARM" in dropd|plain|grpd|opdgrpo|exopd) ;; *) echo "Unknown method: $ARM" >&2; exit 2 ;; esac
   [[ "$LAM" =~ ^-?[0-9]+([.][0-9]+)?$ ]] || { echo 'lambda must be numeric.' >&2; exit 2; }
   [[ "$SEED" =~ ^[0-9]+$ ]] || { echo 'data_seed must be a non-negative integer.' >&2; exit 2; }
   [[ "$STEPS" =~ ^[1-9][0-9]*$ ]] || { echo 'STEPS must be a positive integer.' >&2; exit 2; }
@@ -98,10 +98,10 @@ train)
   case "$TRAIN" in /*) ;; *) TRAIN="$PWD/$TRAIN" ;; esac
   case "$VAL" in /*) ;; *) VAL="$PWD/$VAL" ;; esac
   NAME=math_${ARM}
-  if [ "$ARM" = ours ]; then NAME=${NAME}_lam${LAM}; fi
+  if [ "$ARM" = dropd ]; then NAME=${NAME}_lam${LAM}; fi
   NAME=${NAME}_seed${SEED}
   LOG=$RESULTS_DIR/$NAME.log
-  printf 'Dr. OPD launch plan\nMethod: %s\nStudent: %s\nTeacher: %s\nLambda argument (ours): %s\nData seed: %s\nSteps: %s\nGPUs: %s\nCUDA_VISIBLE_DEVICES: %s\nCheckpoint steps: %s\nTraining data: %s\nEvaluation data: %s\nLog: %s\n' \
+  printf 'Dr. OPD launch plan\nMethod: %s\nStudent: %s\nTeacher: %s\nLambda argument (dropd): %s\nData seed: %s\nSteps: %s\nGPUs: %s\nCUDA_VISIBLE_DEVICES: %s\nCheckpoint steps: %s\nTraining data: %s\nEvaluation data: %s\nLog: %s\n' \
     "$ARM" "$STUDENT" "$TEACHER" "$LAM" "$SEED" "$STEPS" "$NGPU" "${CUDA_VISIBLE_DEVICES:-not set}" "$EVAL_STEPS" "$TRAIN" "$VAL" "$LOG"
   echo 'Evaluation: original test_freq=1000 plus final step; TEST_STEPS is not consumed by this trainer.'
   if [ "$DRY_RUN" = 1 ]; then

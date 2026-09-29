@@ -54,15 +54,15 @@ The check requires PyArrow, confirms the expected row counts and required top-le
 ## Launchers
 
 ```bash
-bash run.sh train ours --dry-run  # CPU-safe launch plan, not a full Hydra configuration dump
-bash run.sh train ours 0.4 2      # Dr. OPD: lambda=0.4, data seed=2
+bash run.sh train dropd --dry-run # CPU-safe launch plan, not a full Hydra configuration dump
+bash run.sh train dropd 0.4 2     # Dr. OPD: lambda=0.4, data seed=2
 bash run.sh train plain          # Vanilla sampled-token OPD
 bash run.sh train grpd           # GRPD
 bash run.sh train opdgrpo        # OPD + GRPO
 bash run.sh train exopd          # ExOPD
 ```
 
-The root launcher supplies overrides that differ from some internal scripts' fallback defaults. Do not use `e030_ours.sh` directly as a substitute for the root preset.
+The root launcher supplies overrides that differ from some internal scripts' fallback defaults. Do not use `e030_dropd.sh` directly as a substitute for the root preset.
 
 | Setting | Default | Override |
 | --- | --- | --- |
@@ -73,7 +73,7 @@ The root launcher supplies overrides that differ from some internal scripts' fal
 | Prompt / response limits | 1,024 / 12,288 | `RESP_LEN`, `VAL_LEN` for response limits |
 | Learning rate | 1e-5, constant | `ACTOR_LR` |
 | Gradient clipping | 1.0 | `GRAD_CLIP` |
-| Weighting strength | 0.4 | Third positional argument for `train ours` |
+| Weighting strength | 0.4 | Third positional argument for `train dropd` |
 | Weight bounds | 0.001 to 3.0 | `CREDIT_WMIN`, `CREDIT_WMAX` |
 | Active fraction | 1.0 | `CREDIT_ACTIVE` |
 | Data seed | 2 | Fourth positional argument |
