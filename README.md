@@ -31,7 +31,7 @@ $$
 
 Here, $w$ is a weight function defined on every possible generated tokens.
 
-Directly solving Eq. (1) is computationally infeasible. We develop an iterative solver: at each round, we update the weights in closed form, then take a gradient step on the resulting weighted OPD objective.
+Directly solving Dr. OPD exactly would require repeatedly training the student under different weight functions and then selecting the best weight, which is computationally infeasible. We develop an iterative solver: at each round, we update the weights in closed form, then take a gradient step on the resulting weighted OPD objective.
 
 <p align="center">
   <a href="assets/figure1.png"><img src="assets/figure1.png" width="100%" alt="Figure 1. Vanilla OPD assigns equal weights to teacher signals. Dr. OPD alternates closed-form weight updates and weighted OPD gradient updates."></a>
