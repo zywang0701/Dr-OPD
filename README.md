@@ -40,7 +40,8 @@ Directly solving Dr. OPD exactly would require repeatedly training the student u
 
 ## Results
 
-Dr. OPD outperforms the evaluated baselines across strong-to-weak and same-size distillation on math and code. In strong-to-weak distillation, it improves Qwen3-1.7B's average math performance by **9.7 points** over vanilla OPD, surpassing its larger Qwen3-4B teacher (**35.0 vs. 34.1**).
+- **In strong-to-weak distillation**, Dr. OPD outperforms all evaluated baselines on math and code. It improves Qwen3-1.7B's average math performance by **9.7 points** over vanilla OPD, surpassing its larger Qwen3-4B teacher (**35.0 vs. 34.1**).
+- **In same-size distillation**, Dr. OPD again achieves the best math performance among all evaluated methods and surpasses the RL-trained teacher in both the Instruct and Base settings.
 
 <p align="center">
   <a href="assets/figure2.png"><img src="assets/figure2.png" width="100%" alt="Figure 2. Dr. OPD outperforms vanilla OPD and the teacher in the illustrated strong-to-weak and same-size math settings."></a>

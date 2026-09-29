@@ -1,6 +1,6 @@
 <div align="center">
 
-# Dr. OPD
+# Dr. OPD （On-policy Distillation Done Right)
 
 ### Learning What to Follow for Optimal<br>On-Policy Distillation of Large Language Models
 
@@ -35,12 +35,13 @@ $$
 
 <p align="center">
   <a href="assets/figure1.png"><img src="assets/figure1.png" width="100%" alt="图 1：Vanilla OPD 使用相同权重；Dr. OPD 交替进行闭式权重更新与加权 OPD 梯度更新。"></a>
-  <br><sub><b>图 1.</b> Dr. OPD 方法示意。点击查看原图。</sub>
+  <br><sub><b>图 1.</b> Dr. OPD 方法示意。</sub>
 </p>
 
 ## 实验结果
 
-Dr. OPD 在数学与代码任务的 strong-to-weak 和 same-size 蒸馏设置中，优于所比较的基线。在 strong-to-weak 设置下，相比 vanilla OPD，Qwen3-1.7B 的数学平均表现提升 **9.7 个百分点**，超过更大的 Qwen3-4B 教师（**35.0 vs. 34.1**）。
+- **在 strong-to-weak 蒸馏中**，Dr. OPD 在数学与代码任务上均优于所有比较的基线。相比 vanilla OPD，Qwen3-1.7B 的数学平均表现提升 **9.7 个百分点**，超过更大的 Qwen3-4B 教师（**35.0 vs. 34.1**）。
+- **在 same-size 蒸馏中**，Dr. OPD 同样在所有比较的方法中取得最佳数学表现，并在 Instruct 和 Base 两种设置下均超过各自的 RL-trained teacher。
 
 <p align="center">
   <a href="assets/figure2.png"><img src="assets/figure2.png" width="100%" alt="图 2：Dr. OPD 在图示的数学蒸馏设置中优于 vanilla OPD 和教师。"></a>

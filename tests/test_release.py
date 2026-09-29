@@ -102,6 +102,15 @@ class DocumentationTests(unittest.TestCase):
             for number in (1, 2):
                 self.assertIn(f'src="assets/figure{number}.png"', text)
 
+    def test_results_highlight_both_distillation_settings(self):
+        for name, heading in (("README.md", "## Results"), ("README_zh.md", "## 实验结果")):
+            with self.subTest(document=name):
+                section = (ROOT / name).read_text().split(heading, 1)[1].split("\n## ", 1)[0]
+                bullets = re.findall(r"^- .+$", section, re.M)
+                self.assertEqual(len(bullets), 2)
+                self.assertIn("strong-to-weak", bullets[0])
+                self.assertIn("same-size", bullets[1])
+
     def test_public_docs_exclude_release_preparation_notes(self):
         documents = [ROOT / "README.md", ROOT / "README_zh.md", ROOT / "UPSTREAM.md",
                      ROOT / "LICENSE.md", *sorted((ROOT / "docs").glob("*.md"))]
