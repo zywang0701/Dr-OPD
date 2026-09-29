@@ -1,6 +1,6 @@
 <div align="center">
 
-# Dr. OPD
+# Dr. OPD （On-policy Distillation Done Right)
 
 ### Learning What to Follow for Optimal<br>On-Policy Distillation of Large Language Models
 
