@@ -1,0 +1,40 @@
+# Experiment outputs and local environments
+work/
+results/
+outputs/
+checkpoints/
+wandb/
+ray_results/
+credit_trace/
+.venv/
+venv/
+.cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.DS_Store
+
+# Data and model binaries are distributed separately
+*.parquet
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.log
+*.zip
+
+# Private configuration, credentials, and local-only review artifacts
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.preview/
+*.preview.html
+.release-local/
+**/.gemini/
+**/.codex/
+**/.claude/

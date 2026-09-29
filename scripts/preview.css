@@ -1,0 +1,26 @@
+/* Local review only: approximate GitHub's README typography, not a project website. */
+:root { color-scheme: light; }
+html { background: #f6f8fa; }
+body { box-sizing: border-box; max-width: 1012px; margin: 28px auto; padding: 36px 46px;
+  border: 1px solid #d1d9e0; border-radius: 8px; background: #fff; color: #1f2328;
+  font: 16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; }
+h1,h2,h3 { line-height: 1.25; font-weight: 600; margin: 24px 0 16px; }
+h1 { font-size: 2em; padding-bottom: .3em; border-bottom: 1px solid #d1d9e0; }
+h2 { font-size: 1.5em; padding-bottom: .3em; border-bottom: 1px solid #d1d9e0; }
+h3 { font-size: 1.25em; }
+a { color: #0969da; text-decoration: none; }
+a:hover { text-decoration: underline; }
+p,ul,ol,table,pre { margin: 0 0 16px; }
+img { max-width: 100%; height: auto; vertical-align: middle; }
+img[height="30"] { height: 30px; margin: 4px 2px; }
+sub,sup { font-size: 75%; }
+code { font: 85% ui-monospace,SFMono-Regular,Consolas,monospace; background: #eff1f3; padding: .2em .4em; border-radius: 4px; }
+pre { padding: 16px; overflow: auto; line-height: 1.45; background: #f6f8fa; border-radius: 6px; }
+pre code { padding: 0; background: transparent; }
+table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+th,td { padding: 6px 13px; border: 1px solid #d1d9e0; }
+tr:nth-child(even) { background: #f6f8fa; }
+details { margin: 16px 0 24px; }
+summary { cursor: pointer; margin-bottom: 16px; }
+.math.display { display: block; overflow-x: auto; margin: 22px 0; text-align: center; }
+@media (max-width: 700px) { body { margin: 0; padding: 22px 18px; border: 0; border-radius: 0; } h1 { font-size: 1.8em; } }

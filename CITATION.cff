@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use Dr. OPD, please cite the accompanying preprint."
+type: software
+title: "Dr. OPD: Learning What to Follow for Optimal On-Policy Distillation of Large Language Models"
+authors:
+  - family-names: Wang
+    given-names: Zhenyu
+    affiliation: "Department of Statistics, Rutgers University"
+  - family-names: Wang
+    given-names: Tianze
+    affiliation: "Department of Statistics, Rutgers University"
+  - family-names: Zhang
+    given-names: Linjun
+    affiliation: "Department of Statistics, Rutgers University"
+  - family-names: Hu
+    given-names: Yifan
+    affiliation: "Department of Statistics, Rutgers University"
+preferred-citation:
+  type: unpublished
+  title: "Dr. OPD: Learning What to Follow for Optimal On-Policy Distillation of Large Language Models"
+  authors:
+    - family-names: Wang
+      given-names: Zhenyu
+    - family-names: Wang
+      given-names: Tianze
+    - family-names: Zhang
+      given-names: Linjun
+    - family-names: Hu
+      given-names: Yifan
+  year: 2026
+  notes: "Preprint. The first two authors contributed equally."
