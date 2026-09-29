@@ -67,6 +67,19 @@ class DocumentationTests(unittest.TestCase):
             self.assertEqual(svg.get("height"), "30")
             self.assertTrue(svg.get("aria-label"))
 
+    def test_equation_delimiters_survive_markdown_escaping(self):
+        for name in ("README.md", "README_zh.md"):
+            with self.subTest(document=name):
+                equation = (ROOT / name).read_text().split("$$")[1]
+                # GFM can consume backslashes before punctuation such as braces.
+                # Named delimiter commands survive that Markdown processing.
+                markdown_processed = re.sub(r"\\([{}])", r"\1", equation)
+                self.assertIn(r"\left\lbrace", markdown_processed)
+                self.assertIn(r"\right\rbrace", markdown_processed)
+                self.assertIn(r"\tag{1}", markdown_processed)
+                self.assertNotIn(r"\left{", markdown_processed)
+                self.assertNotIn(r"\right}", markdown_processed)
+
     def test_framework_matches_original_manifest(self):
         lines = (ROOT / "docs/source-manifest.sha256").read_text().splitlines()
         self.assertGreater(len(lines), 100)

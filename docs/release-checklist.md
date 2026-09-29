@@ -8,7 +8,7 @@ This page tracks decisions and evidence, not promised future results.
 - [x] Separate paper-reported results from code validation and packaged experiment coverage.
 - [x] Provide a CPU-only dry run; do not start GPU experiments during packaging.
 - [x] Exclude datasets, weights, private logs, server reports and credentials from Git.
-- [x] Pass 13 CPU-only packaging tests and compare all 322 framework Python files with the source snapshot.
+- [x] Pass 14 CPU-only packaging tests, including a Markdown equation-delimiter regression check, and compare all 322 framework Python files with the source snapshot.
 - [x] Render and visually review the English README, including Eq. (1) and both paper figures.
 - [ ] Confirm the GitHub owner, repository name and visibility with the authors.
 - [ ] Select a repository-wide license for the project additions and paper assets.

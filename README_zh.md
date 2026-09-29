@@ -26,7 +26,7 @@ Department of Statistics, Rutgers University<br>
 On-policy distillation（OPD）在学生生成的回答上提供密集的 token-level 教师监督。Vanilla OPD 为每个教师信号赋予相同的权重；**Dr. OPD** 则根据这些信号对提升学生表现的帮助，自适应地调整权重。我们将其表述为：
 
 $$
-\max_w \left\{\text{Student performance after training with } w\text{-weighted OPD}\right\}.
+\max_w \left\lbrace\text{Student performance after training with } w\text{-weighted OPD}\right\rbrace.
 \tag{1}
 $$
 

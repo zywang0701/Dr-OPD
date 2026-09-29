@@ -26,7 +26,7 @@ Department of Statistics, Rutgers University<br>
 On-policy distillation (OPD) provides dense, token-level teacher supervision on student-generated responses. Vanilla OPD assigns the same weight to every teacher signal, while **Dr. OPD** adapts the weights according to their usefulness for improving the student's performance. We formulate this as:
 
 $$
-\max_w \left\{\text{Student performance after training with } w\text{-weighted OPD}\right\}.
+\max_w \left\lbrace\text{Student performance after training with } w\text{-weighted OPD}\right\rbrace.
 \tag{1}
 $$
 
