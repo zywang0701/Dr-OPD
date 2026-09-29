@@ -27,8 +27,8 @@ On-policy distillation (OPD) provides dense, token-level teacher supervision on 
 
 $$
 \max_w \left\lbrace\text{Student performance after training with } w\text{-weighted OPD}\right\rbrace.
-\tag{1}
 $$
+Here, $w$ is a weight function defined on every possible generated tokens.
 
 Directly solving Eq. (1) is computationally infeasible. We develop an iterative solver: at each round, we update the weights in closed form, then take a gradient step on the resulting weighted OPD objective.
 
@@ -50,7 +50,7 @@ The figure reports the manuscript's five-benchmark math average, using **avg@16*
 
 ## Quick Start
 
-The current implementation provides the **math training pipeline**, based on Tianze's original code, with Dr. OPD and four baselines. The paper's code-generation experiments are documented in the [results](docs/results.md); dedicated code-generation launchers are not included in this snapshot.
+The current implementation provides the **math training pipeline**, with Dr. OPD and four baselines. The paper's code-generation experiments are documented in the [results](docs/results.md); dedicated code-generation launchers are not included in this snapshot.
 
 ### 1. Inspect the configuration — no GPU needed
 
