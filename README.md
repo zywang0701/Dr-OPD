@@ -4,7 +4,7 @@
 
 ### Learning What to Follow for Optimal<br>On-Policy Distillation of Large Language Models
 
-[Zhenyu Wang](https://zywang0701.github.io/)<sup>\*</sup> · Tianze Wang<sup>\*</sup> · [Linjun Zhang](https://linjunz.github.io/) · [Yifan Hu](https://sites.google.com/view/yifan-hu)
+[Zhenyu Wang](https://zywang0701.github.io/)<sup>\*</sup> · [Tianze Wang](https://tzwng.github.io/)<sup>\*</sup> · [Linjun Zhang](https://linjunz.github.io/) · [Yifan Hu](https://sites.google.com/view/yifan-hu)
 
 Department of Statistics, Rutgers University<br>
 <sub>\* Equal contribution</sub>
