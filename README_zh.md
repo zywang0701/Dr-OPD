@@ -126,11 +126,11 @@ STEPS=30 bash run.sh train dropd --dry-run
 ## 引用
 
 ```bibtex
-@misc{wang2026dropd,
+@article{wang2026dropd,
   title  = {Dr. OPD: Learning What to Follow for Optimal On-Policy Distillation of Large Language Models},
   author = {Wang, Zhenyu and Wang, Tianze and Zhang, Linjun and Hu, Yifan},
-  year   = {2026},
-  note   = {Preprint}
+  journal= {arXiv preprint arXiv:2609.38025},
+  year   = {2026}
 }
 ```
 
