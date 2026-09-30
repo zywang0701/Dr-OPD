@@ -1,6 +1,7 @@
 cff-version: 1.2.0
-message: "If you use Dr. OPD, please cite the accompanying preprint."
+message: "If you use Dr. OPD, please cite the arXiv paper below."
 type: software
+repository-code: "https://github.com/zywang0701/Dr-OPD"
 title: "Dr. OPD: Learning What to Follow for Optimal On-Policy Distillation of Large Language Models"
 authors:
   - family-names: Wang
@@ -16,7 +17,7 @@ authors:
     given-names: Yifan
     affiliation: "Department of Statistics, Rutgers University"
 preferred-citation:
-  type: unpublished
+  type: article
   title: "Dr. OPD: Learning What to Follow for Optimal On-Policy Distillation of Large Language Models"
   authors:
     - family-names: Wang
@@ -28,4 +29,10 @@ preferred-citation:
     - family-names: Hu
       given-names: Yifan
   year: 2026
-  notes: "Preprint. The first two authors contributed equally."
+  journal: "arXiv preprint arXiv:2609.38025"
+  url: "https://arxiv.org/abs/2609.38025"
+  identifiers:
+    - type: other
+      value: "arXiv:2609.38025"
+      description: "arXiv preprint"
+  notes: "The first two authors contributed equally."

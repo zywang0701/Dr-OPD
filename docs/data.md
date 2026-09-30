@@ -41,4 +41,4 @@ The evaluation bundle combines AIME24 (30), AIME25 (30), AMC (83), MATH500 (500)
 
 The manuscript trains Qwen3-1.7B-Base on the difficulty `[3,4)` band, with a separate four-shot prompt. Other math students use `[6,10]`. The helper `scripts/make_deepmath_level.py` creates a single difficulty band and requires the level-6 reference file. Consult its arguments and set `DM_REF` explicitly; its default paths use `/tmp`.
 
-Code-generation data, code execution/evaluation infrastructure, and the Base-student prompting recipe are described in the [paper](../assets/paper.pdf) but are not packaged as runnable presets here. Dataset and model terms remain those of their original providers.
+Code-generation data, code execution/evaluation infrastructure, and the Base-student prompting recipe are described in the [paper](https://arxiv.org/abs/2609.38025) but are not packaged as runnable presets here. Dataset and model terms remain those of their original providers.

@@ -10,14 +10,16 @@ Department of Statistics, Rutgers University<br>
 <sub>\* Equal contribution</sub>
 
 <p>
-  <a href="assets/paper.pdf"><img src="assets/badge-paper.svg" alt="Read the paper" height="30"></a>
+  <a href="https://arxiv.org/abs/2609.38025"><img src="assets/badge-paper.svg" alt="Read the paper on arXiv" height="30"></a>
   <a href="#quick-start"><img src="assets/badge-start.svg" alt="Quick start" height="30"></a>
   <a href="#results"><img src="assets/badge-results.svg" alt="View results" height="30"></a>
 </p>
 
+[arXiv:2609.38025](https://arxiv.org/abs/2609.38025) · [PDF](https://arxiv.org/pdf/2609.38025)
+
 **English** · [中文](README_zh.md)
 
-[Introduction](#introduction) · [Results](#results) · [Quick Start](#quick-start) · [Reproduction](docs/reproduction.md) · [Citation](#citation)
+[Introduction](#introduction) · [Visual Overview](#visual-overview) · [Results](#results) · [Quick Start](#quick-start) · [Reproduction](docs/reproduction.md) · [Citation](#citation)
 
 </div>
 
@@ -36,6 +38,13 @@ Directly solving Dr. OPD exactly would require repeatedly training the student u
 <p align="center">
   <a href="assets/figure1.png"><img src="assets/figure1.png" width="100%" alt="Figure 1. Vanilla OPD assigns equal weights to teacher signals. Dr. OPD alternates closed-form weight updates and weighted OPD gradient updates."></a>
   <br><sub><b>Figure 1.</b> Illustration of Dr. OPD.</sub>
+</p>
+
+## Visual Overview
+
+<p align="center">
+  <a href="assets/DROPD-all-eng.png"><img src="assets/DROPD-all-eng.png" width="100%" alt="Dr. OPD in six panels: why teacher signals need different weights, how student rollouts and outcome rewards produce token credits, and the resulting distillation gains."></a>
+  <br><sub>Dr. OPD in six panels: motivation, token credit, adaptive weighting, and results. Click the poster to view it at full resolution.</sub>
 </p>
 
 ## Results
@@ -131,7 +140,8 @@ The training implementation is in `Dropd/verl/`.
   title  = {Dr. OPD: Learning What to Follow for Optimal On-Policy Distillation of Large Language Models},
   author = {Wang, Zhenyu and Wang, Tianze and Zhang, Linjun and Hu, Yifan},
   journal= {arXiv preprint arXiv:2609.38025},
-  year   = {2026}
+  year   = {2026},
+  url    = {https://arxiv.org/abs/2609.38025}
 }
 ```
 

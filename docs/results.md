@@ -2,7 +2,7 @@
 
 [← Project homepage](../README.md)
 
-The following results are reported in the [paper](../assets/paper.pdf). Math uses avg@16 across AIME24, AIME25, AMC, Minerva and OlympiadBench. Code uses avg@4 across HumanEval+, MBPP+ and LiveCodeBench. The paper reports the best evaluated checkpoint per method.
+The following results are reported in the [paper](https://arxiv.org/abs/2609.38025). Math uses avg@16 across AIME24, AIME25, AMC, Minerva and OlympiadBench. Code uses avg@4 across HumanEval+, MBPP+ and LiveCodeBench. The paper reports the best evaluated checkpoint per method.
 
 ## Strong-to-weak distillation
 

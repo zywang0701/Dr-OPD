@@ -10,14 +10,16 @@ Department of Statistics, Rutgers University<br>
 <sub>\* 共同第一作者</sub>
 
 <p>
-  <a href="assets/paper.pdf"><img src="assets/badge-paper.svg" alt="阅读论文" height="30"></a>
+  <a href="https://arxiv.org/abs/2609.38025"><img src="assets/badge-paper.svg" alt="在 arXiv 阅读论文" height="30"></a>
   <a href="#快速开始"><img src="assets/badge-start.svg" alt="快速开始" height="30"></a>
   <a href="#实验结果"><img src="assets/badge-results.svg" alt="实验结果" height="30"></a>
 </p>
 
+[arXiv:2609.38025](https://arxiv.org/abs/2609.38025) · [PDF](https://arxiv.org/pdf/2609.38025)
+
 [English](README.md) · **中文**
 
-[方法介绍](#方法介绍) · [实验结果](#实验结果) · [快速开始](#快速开始) · [复现说明](docs/reproduction.md) · [引用](#引用)
+[方法介绍](#方法介绍) · [一图看懂](#一图看懂-dr-opd) · [实验结果](#实验结果) · [快速开始](#快速开始) · [复现说明](docs/reproduction.md) · [引用](#引用)
 
 </div>
 
@@ -36,6 +38,13 @@ $$
 <p align="center">
   <a href="assets/figure1.png"><img src="assets/figure1.png" width="100%" alt="图 1：Vanilla OPD 使用相同权重；Dr. OPD 交替进行闭式权重更新与加权 OPD 梯度更新。"></a>
   <br><sub><b>图 1.</b> Dr. OPD 方法示意。</sub>
+</p>
+
+## 一图看懂 Dr. OPD
+
+<p align="center">
+  <a href="assets/DROPD-all.png"><img src="assets/DROPD-all.png" width="100%" alt="六格图解 Dr. OPD：为何需要区别对待教师信号，如何用学生 rollout 与结果奖励计算 token credit，以及自适应加权带来的蒸馏收益。"></a>
+  <br><sub>六格图解 Dr. OPD：研究动机、token credit、自适应权重与实验结果。点击海报查看高清原图。</sub>
 </p>
 
 ## 实验结果
@@ -130,7 +139,8 @@ STEPS=30 bash run.sh train dropd --dry-run
   title  = {Dr. OPD: Learning What to Follow for Optimal On-Policy Distillation of Large Language Models},
   author = {Wang, Zhenyu and Wang, Tianze and Zhang, Linjun and Hu, Yifan},
   journal= {arXiv preprint arXiv:2609.38025},
-  year   = {2026}
+  year   = {2026},
+  url    = {https://arxiv.org/abs/2609.38025}
 }
 ```
 

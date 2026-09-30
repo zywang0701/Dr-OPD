@@ -2,7 +2,7 @@
 
 [← Project homepage](../README.md)
 
-The [paper](../assets/paper.pdf) is the reference for the bilevel formulation, assumptions, and solver. This page connects the implementation to the paper; it does not replace its mathematical definitions.
+The [paper](https://arxiv.org/abs/2609.38025) is the reference for the bilevel formulation, assumptions, and solver. This page connects the implementation to the paper; it does not replace its mathematical definitions.
 
 ## Reading order
 
