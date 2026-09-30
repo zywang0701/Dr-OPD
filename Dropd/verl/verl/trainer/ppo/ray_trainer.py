@@ -1396,7 +1396,7 @@ class RayPPOTrainer:
                             "norm_adv_by_std_in_grpo", True
                         )  # GRPO adv normalization factor
 
-                        # --- E030 credit gate (ours): mask the sampled-token reward by sign(c_t) ---
+                        # --- credit gate (Dr. OPD): mask the sampled-token reward by sign(c_t) ---
                         rollout_cfg = self.config.actor_rollout_ref.rollout
                         if (rollout_cfg.get("credit_gated", False)
                                 and self.use_rm

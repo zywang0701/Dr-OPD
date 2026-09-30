@@ -26,7 +26,7 @@ log "installing python deps"
   vllm==0.10.2 transformers==4.57.6 "ray[default]" hydra-core "tensordict>=0.8.0,<=0.10.0,!=0.9.0" \
   codetiming pylatexenc latex2sympy2_extended math_verify wandb torchdata datasets==5.0.1 "pyarrow>=19.0.0" \
   dill peft accelerate "numpy<2.0.0" pandas pip ninja packaging wheel setuptools psutil 2>&1 | tail -3
-"$UV" pip install --python "$VENV/bin/python" --index-url "$IDX" --no-deps -e "$HERE/OPDVR/verl" 2>&1 | tail -2
+"$UV" pip install --python "$VENV/bin/python" --index-url "$IDX" --no-deps -e "$HERE/Dropd/verl" 2>&1 | tail -2
 
 # 3. flash-attn 2.8.3 (verl runs with attn_implementation=flash_attention_2)
 fa_ok() {

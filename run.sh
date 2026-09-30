@@ -72,8 +72,8 @@ setup)
   ;;
 
 data)
-  TRAIN=${TRAIN_DATASET:-$HERE/OPDVR/datasets/deepmath-level6-train.parquet}
-  VAL=${TEST_DATASET:-$HERE/OPDVR/datasets/valid_final_unique.parquet}
+  TRAIN=${TRAIN_DATASET:-$HERE/Dropd/datasets/deepmath-level6-train.parquet}
+  VAL=${TEST_DATASET:-$HERE/Dropd/datasets/valid_final_unique.parquet}
   printf 'Train data: %s\nEvaluation data: %s\n' "$TRAIN" "$VAL"
   [ "$DRY_RUN" = 0 ] || exit 0
   if [ -x "$VENV/bin/python" ]; then DATA_PY="$VENV/bin/python"; else DATA_PY=${PYTHON:-python3}; fi
@@ -91,7 +91,7 @@ train)
   [[ "$STEPS" =~ ^[1-9][0-9]*$ ]] || { echo 'STEPS must be a positive integer.' >&2; exit 2; }
   [[ "$NGPU" =~ ^[1-9][0-9]*$ ]] || { echo 'NGPU must be a positive integer.' >&2; exit 2; }
   [[ "$EVAL_STEPS" =~ ^[0-9]+(,[0-9]+)*$ ]] || { echo 'EVAL_STEPS must be comma-separated integers.' >&2; exit 2; }
-  DS=$HERE/OPDVR/datasets
+  DS=$HERE/Dropd/datasets
   TRAIN=${TRAIN_DATASET:-$DS/deepmath-level6-train.parquet}
   VAL=${TEST_DATASET:-$DS/valid_final_unique.parquet}
   # Internal scripts change directory; make relative user paths stable first.
@@ -105,14 +105,14 @@ train)
     "$ARM" "$STUDENT" "$TEACHER" "$LAM" "$SEED" "$STEPS" "$NGPU" "${CUDA_VISIBLE_DEVICES:-not set}" "$EVAL_STEPS" "$TRAIN" "$VAL" "$LOG"
   echo 'Evaluation: original test_freq=1000 plus final step; TEST_STEPS is not consumed by this trainer.'
   if [ "$DRY_RUN" = 1 ]; then
-    printf 'Entry point: bash OPDVR/e030_%s.sh\nDry run only: no directories, GPU queries, Ray, downloads or training.\n' "$ARM"
+    printf 'Entry point: bash Dropd/arm_%s.sh\nDry run only: no directories, GPU queries, Ray, downloads or training.\n' "$ARM"
     exit 0
   fi
   [ -f "$TRAIN" ] && [ -f "$VAL" ] || { echo 'Missing prepared data. See docs/data.md and run bash run.sh data.' >&2; exit 1; }
   [ -x "$VENV/bin/python" ] || { echo "Missing environment: $VENV. Run bash run.sh setup or set VENV." >&2; exit 1; }
   runtime_env
   [ ! -e "$LOG" ] || { echo "Refusing to overwrite an existing log: $LOG. Choose a new RESULTS_DIR." >&2; exit 1; }
-  cd "$HERE/OPDVR"
+  cd "$HERE/Dropd"
   env ACTOR_MODEL_PATH="$STUDENT" REWARD_MODEL_PATH="$TEACHER" \
       TRAIN_DATASET="$TRAIN" TEST_DATASET="$VAL" DATA_SEED="$SEED" \
       STEPS="$STEPS" TEST_STEPS="$EVAL_STEPS" SAVE_STEPS="$EVAL_STEPS" \
@@ -121,7 +121,7 @@ train)
       FINAL_CKPT_DIR="${FINAL_CKPT_DIR:-$WORK/checkpoints/$NAME}" \
       MAX_RESP_LENGTH="$RESP_LEN" MAX_VAL_RESP_LENGTH="$VAL_LEN" MAX_PROMPT_LENGTH=1024 \
       CREDIT_LAM="$LAM" CREDIT_ACTIVE="$CREDIT_ACTIVE" CREDIT_WMIN="$CREDIT_WMIN" CREDIT_JVP_CHECK=0 \
-      bash "./e030_$ARM.sh" actor_rollout_ref.rollout.dtype=bfloat16 ++reward_model.model.dtype=bfloat16 \
+      bash "./arm_$ARM.sh" actor_rollout_ref.rollout.dtype=bfloat16 ++reward_model.model.dtype=bfloat16 \
       2>&1 | tee "$LOG"
   ;;
 

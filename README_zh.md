@@ -112,14 +112,14 @@ STEPS=30 bash run.sh train dropd --dry-run
 
 ## 代码导航
 
-训练实现位于 `OPDVR/verl/`。
+训练实现位于 `Dropd/verl/`。
 
 | 内容 | 文件 |
 | --- | --- |
-| Token weights | [`credit_gate.py`](OPDVR/verl/verl/workers/actor/credit_gate.py) |
-| Token-level directional derivatives | [`jvp_influence.py`](OPDVR/verl/verl/workers/actor/jvp_influence.py) |
-| Credits 计算 | [`dp_actor.py`](OPDVR/verl/verl/workers/actor/dp_actor.py) |
-| 加权 OPD 训练 | [`ray_trainer.py`](OPDVR/verl/verl/trainer/ppo/ray_trainer.py) |
+| Token weights | [`credit_gate.py`](Dropd/verl/verl/workers/actor/credit_gate.py) |
+| Token-level directional derivatives | [`jvp_influence.py`](Dropd/verl/verl/workers/actor/jvp_influence.py) |
+| Credits 计算 | [`dp_actor.py`](Dropd/verl/verl/workers/actor/dp_actor.py) |
+| 加权 OPD 训练 | [`ray_trainer.py`](Dropd/verl/verl/trainer/ppo/ray_trainer.py) |
 
 [方法细节](docs/method.md) · [复现指南](docs/reproduction.md) · [数据](docs/data.md) · [上游来源](UPSTREAM.md)
 

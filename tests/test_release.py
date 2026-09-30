@@ -29,7 +29,7 @@ class LinkParser(HTMLParser):
 class DocumentationTests(unittest.TestCase):
     def test_local_document_links(self):
         documents = [ROOT / "README.md", ROOT / "README_zh.md", ROOT / "UPSTREAM.md",
-                     ROOT / "LICENSE.md", ROOT / "OPDVR/README.md", *sorted((ROOT / "docs").glob("*.md"))]
+                     ROOT / "LICENSE.md", ROOT / "Dropd/README.md", *sorted((ROOT / "docs").glob("*.md"))]
         for document in documents:
             text = document.read_text()
             parser = LinkParser()
@@ -145,8 +145,8 @@ class LauncherTests(unittest.TestCase):
                 result = self.run_launcher("train", arm, "--dry-run")
                 self.assertEqual(result.returncode, 0, result.stderr)
                 self.assertIn(f"Method: {arm}", result.stdout)
-                self.assertIn(f"Entry point: bash OPDVR/e030_{arm}.sh", result.stdout)
-                self.assertTrue((ROOT / f"OPDVR/e030_{arm}.sh").is_file())
+                self.assertIn(f"Entry point: bash Dropd/arm_{arm}.sh", result.stdout)
+                self.assertTrue((ROOT / f"Dropd/arm_{arm}.sh").is_file())
                 self.assertIn("test_freq=1000", result.stdout)
                 self.assertEqual(list(self.scratch.iterdir()), [])
 
@@ -182,10 +182,10 @@ class LauncherTests(unittest.TestCase):
 
     def prepare_mock_training(self):
         root = self.scratch / "repo"
-        (root / "OPDVR").mkdir(parents=True)
+        (root / "Dropd").mkdir(parents=True)
         shutil.copy2(ROOT / "run.sh", root / "run.sh")
-        for source in (ROOT / "OPDVR").glob("*.sh"):
-            shutil.copy2(source, root / "OPDVR" / source.name)
+        for source in (ROOT / "Dropd").glob("*.sh"):
+            shutil.copy2(source, root / "Dropd" / source.name)
         bindir = self.scratch / "venv/bin"
         bindir.mkdir(parents=True)
         stub = ('#!/usr/bin/env bash\n'
@@ -237,7 +237,7 @@ class LauncherTests(unittest.TestCase):
         self.assertEqual(logfile.read_bytes(), original)
 
     def test_shell_syntax(self):
-        for source in [ROOT / "run.sh", *(ROOT / "scripts").glob("*.sh"), *(ROOT / "OPDVR").glob("*.sh")]:
+        for source in [ROOT / "run.sh", *(ROOT / "scripts").glob("*.sh"), *(ROOT / "Dropd").glob("*.sh")]:
             result = subprocess.run(["bash", "-n", str(source)], text=True, capture_output=True)
             self.assertEqual(result.returncode, 0, f"{source}: {result.stderr}")
 

@@ -19,7 +19,7 @@ import pyarrow.parquet as pq
 L = float(sys.argv[1])
 out = sys.argv[2]
 src = sys.argv[3] if len(sys.argv) > 3 else "/tmp/DeepMath-103K"
-REF = os.environ.get("DM_REF", "/tmp/OPDVR/datasets/deepmath-level6-train.parquet")
+REF = os.environ.get("DM_REF", "/tmp/Dropd/datasets/deepmath-level6-train.parquet")
 SUF = "\nPlease reason step by step, and put your final answer within \\boxed{}."
 
 files = sorted(glob.glob(os.path.join(src, "data", "train-*.parquet")))

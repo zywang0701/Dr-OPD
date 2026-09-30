@@ -4,7 +4,7 @@ Dr. OPD builds on [OPD](https://github.com/thunlp/OPD) and [verl](https://github
 
 ## Implementation
 
-`OPDVR/verl/` contains the training framework and Dr. OPD implementation. It is included directly, not as a Git submodule. The inherited `OPDVR` directory and `e030_*.sh` launcher names are retained for compatibility.
+`Dropd/verl/` contains the training framework and Dr. OPD implementation. It is included directly, not as a Git submodule. The upstream entry points `opd_baseline.sh`, `grpd.sh` and `opdvr.sh` keep their original names so that they can be compared against the upstream code; the per-method launchers are `Dropd/arm_*.sh`.
 
 Upstream license text and source notices are preserved. See [third-party licenses](LICENSE.md).
 

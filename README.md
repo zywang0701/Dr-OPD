@@ -113,14 +113,14 @@ For model paths, evaluation settings, output locations and all method options, s
 
 ## Code Guide
 
-The training implementation is in `OPDVR/verl/`.
+The training implementation is in `Dropd/verl/`.
 
 | Component | Implementation |
 | --- | --- |
-| Token weights | [`credit_gate.py`](OPDVR/verl/verl/workers/actor/credit_gate.py) |
-| Token-level directional derivatives | [`jvp_influence.py`](OPDVR/verl/verl/workers/actor/jvp_influence.py) |
-| Credit computation | [`dp_actor.py`](OPDVR/verl/verl/workers/actor/dp_actor.py) |
-| Weighted OPD training | [`ray_trainer.py`](OPDVR/verl/verl/trainer/ppo/ray_trainer.py) |
+| Token weights | [`credit_gate.py`](Dropd/verl/verl/workers/actor/credit_gate.py) |
+| Token-level directional derivatives | [`jvp_influence.py`](Dropd/verl/verl/workers/actor/jvp_influence.py) |
+| Credit computation | [`dp_actor.py`](Dropd/verl/verl/workers/actor/dp_actor.py) |
+| Weighted OPD training | [`ray_trainer.py`](Dropd/verl/verl/trainer/ppo/ray_trainer.py) |
 
 [Method notes](docs/method.md) · [Reproduction](docs/reproduction.md) · [Data](docs/data.md) · [Upstream provenance](UPSTREAM.md)
 

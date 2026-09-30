@@ -62,7 +62,7 @@ bash run.sh train opdgrpo        # OPD + GRPO
 bash run.sh train exopd          # ExOPD
 ```
 
-The root launcher supplies overrides that differ from some internal scripts' fallback defaults. Do not use `e030_dropd.sh` directly as a substitute for the root preset.
+The root launcher supplies overrides that differ from some internal scripts' fallback defaults. Do not use `arm_dropd.sh` directly as a substitute for the root preset.
 
 | Setting | Default | Override |
 | --- | --- | --- |
