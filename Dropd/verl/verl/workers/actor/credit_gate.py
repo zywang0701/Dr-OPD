@@ -2,7 +2,7 @@
 """Adam-aligned token credits and weight gates for sampled-token OPD.
 
 For token t of response i (state s_t, sampled token o_t), with the teacher push
-    ell_t = log pi_T(o_t|s_t) - log pi_theta(o_t|s_t)          (= rm_scores in the OPDVR fork)
+    ell_t = log pi_T(o_t|s_t) - log pi_theta(o_t|s_t)          (= rm_scores in this fork)
 the credit is the first-order change of the group-relative RL objective along the push,
 
     c_t = ell_t * < grad_theta log pi_theta(o_t|s_t), u_s >,

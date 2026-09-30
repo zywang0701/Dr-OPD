@@ -6,10 +6,10 @@ The [paper](../assets/paper.pdf) is the reference for the bilevel formulation, a
 
 ## Reading order
 
-1. [`ray_trainer.py`](../OPDVR/verl/verl/trainer/ppo/ray_trainer.py): student rollouts, teacher/outcome signals, and the weighted training loop.
-2. [`dp_actor.py`](../OPDVR/verl/verl/workers/actor/dp_actor.py): per-token credit construction; search for `compute_credit`.
-3. [`jvp_influence.py`](../OPDVR/verl/verl/workers/actor/jvp_influence.py): directional derivatives computed with a JVP.
-4. [`credit_gate.py`](../OPDVR/verl/verl/workers/actor/credit_gate.py): shadow optimizer direction and the `iw_gate` weight transformation.
+1. [`ray_trainer.py`](../Dropd/verl/verl/trainer/ppo/ray_trainer.py): student rollouts, teacher/outcome signals, and the weighted training loop.
+2. [`dp_actor.py`](../Dropd/verl/verl/workers/actor/dp_actor.py): per-token credit construction; search for `compute_credit`.
+3. [`jvp_influence.py`](../Dropd/verl/verl/workers/actor/jvp_influence.py): directional derivatives computed with a JVP.
+4. [`credit_gate.py`](../Dropd/verl/verl/workers/actor/credit_gate.py): shadow optimizer direction and the `iw_gate` weight transformation.
 
 ## Default gate
 

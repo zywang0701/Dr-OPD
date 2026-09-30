@@ -825,7 +825,7 @@ class ActorRolloutRefWorker(Worker, DistProfilerExtension):
                         local_path, get_device_id(), dtype=torch.bfloat16,
                         trust_remote_code=self.config.model.get("trust_remote_code", False),
                         qblock=int(rc.get("credit_jvp_qblock", 1024)))
-                    log_gpu_memory_usage("After E030 JVP replica init", logger=logger)
+                    log_gpu_memory_usage("After JVP replica init", logger=logger)
                 if rc.get("credit_mode", "fd") == "fd" and rc.get("credit_fd_fp32", True) or \
                         (rc.get("credit_mode", "fd") == "jvp" and int(rc.get("credit_jvp_check", 0)) > 0):
                     fd_fsdp = OmegaConf.create(OmegaConf.to_container(self.config.actor.fsdp_config, resolve=True))
@@ -855,7 +855,7 @@ class ActorRolloutRefWorker(Worker, DistProfilerExtension):
                     fd_cfg.use_fused_kernels = False
                     self.actor.fd_policy = DataParallelPPOActor(config=omega_conf_to_dataclass(fd_cfg), actor_module=fd_module)
                     self.actor.fd_policy.fp32_forward = True
-                    log_gpu_memory_usage("After E030 fp32 FD copy init", logger=logger)
+                    log_gpu_memory_usage("After fp32 FD copy init", logger=logger)
                 self.actor.credit_gate = CreditGate(
                     self.actor_module_fsdp, eps=rc.get("credit_eps", 1e-6),
                     beta1=rc.get("credit_beta1", 0.9), beta2=rc.get("credit_beta2", 0.999),
